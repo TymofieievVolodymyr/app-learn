@@ -28,3 +28,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/config/
+/public/
+/scripts/
+/package.json
+/package-lock.json
+/README.md
