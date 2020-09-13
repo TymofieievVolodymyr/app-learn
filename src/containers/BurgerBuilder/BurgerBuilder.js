@@ -15,10 +15,10 @@ const INGREDIENT_PRICE = {
 class BurgerBuilder extends Component {
     state = {
         ingredients: {
-            meat: 2,
+            meat: 0,
             cheese: 1,
-            beacon: 0,
-            salad: 1,
+            beacon: 1,
+            salad: 0,
         },
         totalPrice: 4,
     }
@@ -68,6 +68,7 @@ class BurgerBuilder extends Component {
                     addMore={this.addIngredient}
                     lessIng={this.removeIngredientHandler}
                     disable={disableInfo}
+                    price={this.state.totalPrice}
                 />
             </Auxiliary>
         );
