@@ -15,7 +15,7 @@ const INGREDIENT_PRICE = {
 class BurgerBuilder extends Component {
     state = {
         ingredients: {
-            meat: 1,
+            meat: 2,
             cheese: 1,
             beacon: 0,
             salad: 1,
@@ -38,14 +38,11 @@ class BurgerBuilder extends Component {
 
     removeIngredientHandler = (type) => {
         let oldCount = this.state.ingredients[type]
-        let newCount
-        if (oldCount > 0) {
-            newCount = oldCount - 1;
-        } else {
 
+        if ( oldCount <= 0 ) {
             return;
         }
-
+        const newCount = oldCount - 1;
         const updatedIngredients = {
             ...this.state.ingredients
         }
@@ -60,6 +57,7 @@ class BurgerBuilder extends Component {
             <Auxiliary>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls
+                    ingredients={this.state.ingredients}
                     addMore={this.addIngredient}
                     lessIng={this.removeIngredientHandler}
                 />
