@@ -12,24 +12,10 @@ const controls = [
 ]
 
 const buildControls = (props) => {
-    let countOfIngredients = Object.keys(props.ingredients)
-        .map(keyIng => {
-            return [...Array(props.ingredients[keyIng])]
-                // .map((_, i) => {
-                // return <BurgerIngredient key={keyIng + i} type={keyIng}/>
-           // })
-        })
-    // .reduce((arr, el)=>{
-    //     return arr.concat(el)
-    // }, [])
-    console.log(countOfIngredients);
-
-
     return (
         <div className={classes.BuildControls}>
             {controls.map((ctrl,index) => (
                 <BuildControl
-                    quantityOfIngredients={countOfIngredients[index].length}
                     key={ctrl.label}
                     label={ctrl.label}
                     add={() => {
@@ -38,6 +24,7 @@ const buildControls = (props) => {
                     less={() => {
                         props.lessIng(ctrl.type)
                     }}
+                    disable={props.disable[ctrl.type]}
                 />
             ))}
         </div>)
