@@ -32,9 +32,11 @@ const buildControls = (props) => {
             <button
                 className={classes.OrderButton}
                 disabled={!props.purchasable}
+                onClick={props.showModal}
             >Order Now
             </button>
-        </div>)
+        </div>
+    )
 }
 
 export default buildControls;

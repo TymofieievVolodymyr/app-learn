@@ -11,7 +11,6 @@ const INGREDIENT_PRICE = {
     cheese: 0.4,
     beacon: 0.7,
     salad: 0.5,
-
 }
 
 class BurgerBuilder extends Component {
@@ -23,18 +22,34 @@ class BurgerBuilder extends Component {
             salad: 0,
         },
         totalPrice: 4,
-        purchasable:false
+        purchasable: false,
+        modalVisibility: false,
     }
 
-    updatePurchaseState (ingredients) {
+    showModal = () => {
+        this.setState(
+            {modalVisibility: true}
+        );
+    }
+
+    closeHandler = () => {
+        this.setState(
+            {modalVisibility: false}
+        );
+    }
+    continuedHandler  = () => {
+        alert('To be continued!')
+    }
+
+    updatePurchaseState = (ingredients) => {
         const sum = Object.keys(ingredients)
-            .map(igKey=>{
+            .map(igKey => {
                 return ingredients[igKey]
             })
-            .reduce((sum, el)=>{
-              return sum+el;
-            },0)
-        this.setState({purchasable:sum>0})
+            .reduce((sum, el) => {
+                return sum + el;
+            }, 0)
+        this.setState({purchasable: sum > 0})
     }
 
     addIngredient = (type) => {
@@ -78,10 +93,14 @@ class BurgerBuilder extends Component {
 
         return (
             <Auxiliary>
-                <Modal>
+                <Modal
+                    show={this.state.modalVisibility}
+                    close={this.closeHandler}>
                     <OrderSummary
-                        ingredients={this.state.ingredients}
-                    />
+                        price={this.state.totalPrice}
+                        close={this.closeHandler}
+                        continue={this.continuedHandler}
+                        ingredients={this.state.ingredients}/>
                 </Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls
@@ -91,6 +110,7 @@ class BurgerBuilder extends Component {
                     disable={disableInfo}
                     price={this.state.totalPrice}
                     purchasable={this.state.purchasable}
+                    showModal={this.showModal}
                 />
             </Auxiliary>
         );
