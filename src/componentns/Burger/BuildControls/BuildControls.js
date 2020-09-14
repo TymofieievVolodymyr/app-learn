@@ -2,7 +2,7 @@ import React from "react";
 
 import classes from "./BuildControls.module.css"
 import BuildControl from "./BuildControl/BuildControl"
-import BurgerIngredient from "../BurgerIngredient/BurgerIngredient";
+//import BurgerIngredient from "../BurgerIngredient/BurgerIngredient";
 
 const controls = [
     {label: 'Meat', type: 'meat'},
@@ -12,7 +12,7 @@ const controls = [
 ]
 
 const buildControls = (props) => {
-    const orderButtonDisable = !Object.values(props.disable).includes(false)
+    //const orderButtonDisable = !Object.values(props.disable).includes(false)
     return (
         <div className={classes.BuildControls}>
             <p>Total price <strong>{props.price.toFixed(2)}</strong></p>
@@ -29,7 +29,11 @@ const buildControls = (props) => {
                     disable={props.disable[ctrl.type]}
                 />
             ))}
-            <button className={classes.OrderButton} disabled={orderButtonDisable}>Order Now</button>
+            <button
+                className={classes.OrderButton}
+                disabled={!props.purchasable}
+            >Order Now
+            </button>
         </div>)
 }
 
