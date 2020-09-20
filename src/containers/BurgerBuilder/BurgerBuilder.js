@@ -20,7 +20,7 @@ class BurgerBuilder extends Component {
     state = {
         ingredients: null,
         totalPrice: 4,
-        purchasable: false,
+        purchasable: true,
         modalVisibility: false,
         loading: false,
         error: null,
@@ -49,42 +49,48 @@ class BurgerBuilder extends Component {
         this.setState(
             {modalVisibility: false}
         );
+        this.props.history.push('/')
     }
-    continuedHandler = async () => {
-        //alert('To be continued!')
-
-        this.setState({
-            loading: true,
-        });
-        try {
-            const order = {
-                ingredients: this.state.ingredients,
-                price: this.state.totalPrice.toFixed(2),
-                customer: {
-                    name: 'Vovanium',
-                    address: {
-                        street: 'Burshtinova street',
-                        zipCode: '49108',
-                        country: 'Ukraine',
-                    },
-                    email: 'vovanium.timofeev@gmail.com',
-                    deliveryMethod: 'fastest',
-                }
-            }
-
-            const response = await axios.post('/orders.json', order);
-            //console.log(response);
-            this.setState({
-                modalVisibility: false,
-                loading: false,
-            });
-        } catch (error) {
-            this.setState({
-                modalVisibility: false,
-                loading: false,
-            });
-            console.log(error)
-        }
+    // continuedHandler = async () => {
+    //     //alert('To be continued!')
+    //
+    //     this.setState({
+    //         loading: true,
+    //     });
+    //     try {
+    //         const order = {
+    //             ingredients: this.state.ingredients,
+    //             price: this.state.totalPrice.toFixed(2),
+    //             customer: {
+    //                 name: 'Vovanium',
+    //                 address: {
+    //                     street: 'Burshtinova street',
+    //                     zipCode: '49108',
+    //                     country: 'Ukraine',
+    //                 },
+    //                 email: 'vovanium.timofeev@gmail.com',
+    //                 deliveryMethod: 'fastest',
+    //             }
+    //         }
+    //
+    //         const response = await axios.post('/orders.json', order);
+    //         //console.log(response);
+    //         this.setState({
+    //             modalVisibility: false,
+    //             loading: false,
+    //         });
+    //      //this.props.history.push('/checkout')
+    //
+    //     } catch (error) {
+    //         this.setState({
+    //             modalVisibility: false,
+    //             loading: false,
+    //         });
+    //         console.log(error)
+    //     }
+    // }
+    continuedHandler = () => {
+        this.props.history.push('/checkout')
     }
 
     updatePurchaseState(ingredients) {
@@ -138,7 +144,6 @@ class BurgerBuilder extends Component {
         }
         let orderSummary = null;
 
-
         let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner/>;
 
         if (this.state.ingredients) {
@@ -146,7 +151,7 @@ class BurgerBuilder extends Component {
                 <Auxiliary>
                     <Burger ingredients={this.state.ingredients}/>
                     <BuildControls
-                        ingredients={this.state.ingredients}
+                        // ingredients={this.state.ingredients}
                         addMore={this.addIngredient}
                         lessIng={this.removeIngredientHandler}
                         disable={disableInfo}

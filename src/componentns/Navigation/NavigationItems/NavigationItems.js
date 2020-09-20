@@ -4,19 +4,16 @@ import classes from "./NavigationItems.module.css"
 import NavigationItem from "./NavigationItem/NavigationItem"
 
 const navigationItems = (props) => (
-    <ul className={classes.NavigationItems  }>
-        <NavigationItem
-        link="/"
-        active
+    <ul className={classes.NavigationItems}>
+        <NavigationItem link={'/burgerbuilder'}
         >
             Burger Builder
         </NavigationItem>
-        <NavigationItem
-        link="/"
+        <NavigationItem link={'/checkout'}
         >
             Checkout
         </NavigationItem>
     </ul>
 );
 
-export  default  navigationItems;
+export default navigationItems;
