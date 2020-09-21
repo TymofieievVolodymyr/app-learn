@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import Auxiliary from "../../../hoc/Auxiliary/Auxiliary";
 import Button from "../../UI/Button/Button"
-import Checkout from "../../../containers/Checkout/Checkout";
-import {Link} from "react-router-dom";
+//import {Link} from "react-router-dom";
 
 class OrderSummary extends Component {
 

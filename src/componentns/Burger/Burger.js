@@ -10,12 +10,12 @@ const burger = props => {
                 return <BurgerIngredient key={keyIng + i} type={keyIng}/>
             })
         })
-        .reduce((arr, el)=>{
+        .reduce((arr, el) => {
             return arr.concat(el)
         }, [])
 
     if (transformedIngredients.length === 0) {
-       transformedIngredients = <p>Please start adding ingredients!</p>
+        transformedIngredients = <p>Please start adding ingredients!</p>
     }
 
     return (

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 
 import CheckoutSummary from "../../componentns/Order/CheckoutSummary/CheckoutSummary"
-import axios from "../../axios-orders";
+//import axios from "../../axios-orders";
 import {Route} from "react-router-dom";
 import ContactData from "./ContactData/ContactData"
 
