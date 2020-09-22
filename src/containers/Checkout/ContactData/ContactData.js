@@ -17,18 +17,15 @@ class ContactData extends Component {
 
     }
 
-
     contactDataOrderHandler = async (event) => {
         event.preventDefault();
-        console.log(this.props.ingredients);
-        console.log(this.props.price);
         this.setState({
             loading: true,
         });
         try {
             const order = {
                 ingredients: this.props.ingredients,
-                price: this.props.price,
+                price: +this.props.price.toFixed(2),
                 customer: {
                     name: 'Vovanium',
                     address: {
