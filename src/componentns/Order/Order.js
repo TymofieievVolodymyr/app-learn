@@ -1,7 +1,6 @@
 import React from "react";
 
 import classes from './Orders.module.css';
-import BurgerIngredient from "../Burger/BurgerIngredient/BurgerIngredient";
 
 const order = props => {
 
