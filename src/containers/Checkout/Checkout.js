@@ -8,16 +8,13 @@ import ContactData from "./ContactData/ContactData"
 class Checkout extends Component {
     constructor(props) {
         super(props);
-        // this.state = {
-        //     ingredients: null,
-        //     totalPrice: 0,
-        // }
+
         this.query = new URLSearchParams(this.props.location.search);
         this.ingredients = {};
         this.price = null;
         for (let param of this.query.entries()) {
             if (param[0] === 'price') {
-                this.price = +param[1];
+                this.price = +param[1].toFixed(2);
             } else {
                 this.ingredients[param[0]] = +param[1];
             }
