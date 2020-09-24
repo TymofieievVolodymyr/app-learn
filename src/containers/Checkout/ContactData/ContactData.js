@@ -20,6 +20,7 @@ class ContactData extends Component {
                     required: true,
                 },
                 valid: false,
+                touched: false,
             },
             street: {
                 elementType: 'input',
@@ -32,6 +33,7 @@ class ContactData extends Component {
                     required: true,
                 },
                 valid: false,
+                touched: false,
             },
             zipCode: {
                 elementType: 'input',
@@ -42,10 +44,11 @@ class ContactData extends Component {
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 5,
+                    minLength: 2,
                     maxLength: 5,
                 },
                 valid: false,
+                touched: false,
             },
             country: {
                 elementType: 'input',
@@ -58,6 +61,7 @@ class ContactData extends Component {
                     required: true,
                 },
                 valid: false,
+                touched: false,
             },
             email: {
                 elementType: 'input',
@@ -70,6 +74,7 @@ class ContactData extends Component {
                     required: true,
                 },
                 valid: false,
+                touched: false,
             },
             withGift: {
                 elementType: 'checkbox',
@@ -81,6 +86,7 @@ class ContactData extends Component {
                     required: false,
                 },
                 valid: false,
+                touched: false,
             },
             deliveryMethod: {
                 elementType: 'select',
@@ -90,10 +96,17 @@ class ContactData extends Component {
                         {value: 'cheapest', displayValue: 'Cheapest'}
                     ]
                 },
-                value: ''
+                validation: {
+                    required: true,
+                },
+                value: 'fastest',
+                valid: true,
+                touched: false,
             }
         },
-        loading: false
+        loading: false,
+        isValid: false
+
     }
 
     contactDataCheckValidity(value, rules) {
@@ -125,7 +138,6 @@ class ContactData extends Component {
                 formData[formIdentifier] = this.state.orderForm[formIdentifier].value
             }
 
-             console.log( +this.props.price.toFixed(2));
 
             const order = {
                 ingredients: this.props.ingredients,
@@ -165,12 +177,21 @@ class ContactData extends Component {
             updatedFormElement.value = event.target.value;
             console.log(updatedFormElement.value);
         }
-
+        updatedFormElement.touched = true;
         updatedFormElement.valid = this.contactDataCheckValidity(updatedFormElement.value, updatedFormElement.validation);
         updatedForm[inputIdentifier] = updatedFormElement;
+
+        let verifiedForm = true;
+        for (let key in updatedForm) {
+            verifiedForm = updatedForm[key].valid && verifiedForm;
+        }
+
+        console.log(verifiedForm);
+
         //console.log(updatedForm);
         this.setState({
             orderForm: updatedForm,
+            isValid: verifiedForm,
         });
     };
 
@@ -189,13 +210,16 @@ class ContactData extends Component {
                     elementType={formElement.config.elementType}
                     elementConfig={formElement.config.elementConfig}
                     key={formElement.id}
+                    shouldValid={formElement.config.validation}
+                    invalid={!formElement.config.valid}
+                    touched={formElement.config.touched}
                     changed={(event) => {
                         this.contactDataChangedHandler(event, formElement.id)
                     }}
                 />
             ))
             }
-            <Button btnType="Success">ORDER</Button>
+            <Button btnType="Success" disabled={!this.state.isValid}>ORDER</Button>
         </form>);
 
         if (this.state.loading) {

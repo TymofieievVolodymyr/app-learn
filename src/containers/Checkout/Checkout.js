@@ -14,7 +14,7 @@ class Checkout extends Component {
         this.price = null;
         for (let param of this.query.entries()) {
             if (param[0] === 'price') {
-                this.price = +param[1].toFixed(2);
+                this.price = +param[1];
             } else {
                 this.ingredients[param[0]] = +param[1];
             }
