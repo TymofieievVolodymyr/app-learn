@@ -20,7 +20,6 @@ const INGREDIENT_PRICE = {
 
 class BurgerBuilder extends Component {
     state = {
-        purchasable: true,
         modalVisibility: false,
         loading: false,
         error: null,
@@ -52,17 +51,20 @@ class BurgerBuilder extends Component {
     }
 
     continuedHandler = () => {
-        const queryParams = [];
-        for (let i in this.props.ing) {
-            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ing[i]))
-            // queryParams.push(i + '=' + this.props.ing[i])
-        }
-        queryParams.push('price=' + this.props.price);
-        const queryString = queryParams.join('&');
-        this.props.history.push({
-            pathname: '/checkout',
-            search: queryString,
-        });
+        // const queryParams = [];
+        // for (let i in this.props.ing) {
+        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ing[i]))
+        //     // queryParams.push(i + '=' + this.props.ing[i])
+        // }
+        // queryParams.push('price=' + this.props.price);
+        // const queryString = queryParams.join('&');
+        // this.props.history.push({
+        //     pathname: '/checkout',
+        //     search: queryString,
+        // });
+
+        this.props.history.push('/checkout');
+
     }
 
     updatePurchase(ingredients) {
