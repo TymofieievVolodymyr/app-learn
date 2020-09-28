@@ -2,12 +2,7 @@ import * as actionTypes from "../actions/actionTypes"
 
 
 const initialState = {
-    ingredients: {
-        meat: 0,
-        cheese: 0,
-        beacon: 0,
-        salad: 0,
-    },
+    ingredients: null,
     totalPrice: 4
 };
 
@@ -41,6 +36,13 @@ const burgerBuilder = (state = initialState, action) => {
                 [action.ingredientName]: state.ingredients[action.ingredientName] - 1,
             },
             totalPrice: newPrice,
+        }
+    }
+    else if (action.type === actionTypes.FETCH_INGREDIENT) {
+        console.log('1');
+        return {
+            ...state,
+            ingredients: action.fetchIng,
         }
     } else {
         return state

@@ -9,6 +9,7 @@ import axios from "../../axios-orders";
 import Spinner from "../../componentns/UI/Spinner/Spinner"
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import * as burgerBuilderActions from "../../store/actions/index"
+import * as actionTypes from "../../store/actions/actionTypes"
 import {connect} from "react-redux";
 
 const INGREDIENT_PRICE = {
@@ -25,18 +26,19 @@ class BurgerBuilder extends Component {
         error: null,
     }
 
-    // async componentDidMount() {
-    //     try {
-    //         const response = await axios.get('/ingredients.json');
-    //         this.setState({
-    //             ingredients: response.data
-    //         });
-    //     } catch (err) {
-    //         this.setState({
-    //             error: true,
-    //         });
-    //     }
-    // }
+    async componentDidMount() {
+        try {
+            const response = await axios.get('/ingredients.json');
+            this.props.onFetchIngredients(response.data);
+            // this.setState({
+            //     ingredients: response.data
+            // });
+        } catch (err) {
+            // this.setState({
+            //     error: true,
+            // });
+        }
+    }
 
     showModal = () => {
         this.setState(
@@ -169,6 +171,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onAddIngredient: (type) => dispatch(burgerBuilderActions.addIngredients(type)),
         onRemoveIngredient: (type) => dispatch(burgerBuilderActions.removeIngredients(type)),
+        onFetchIngredients: (ingredients) => dispatch({type: actionTypes.FETCH_INGREDIENT, fetchIng:ingredients }),
     }
 }
 
