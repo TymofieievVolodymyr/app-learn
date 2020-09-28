@@ -57,37 +57,6 @@ class BurgerBuilder extends Component {
         return sum > 0
     }
 
-    // addIngredient = (type) => {
-    //     const oldCount = this.props.ing[type]
-    //     const newCount = oldCount + 1;
-    //
-    //     const updatedIngredients = {
-    //         ...this.props.ing
-    //     }
-    //     updatedIngredients[type] = newCount
-    //     const oldPrice = this.props.price;
-    //     const newPrice = oldPrice + INGREDIENT_PRICE[type]
-    //     this.setState({ingredients: updatedIngredients, totalPrice: newPrice})
-    //     this.updatePurchaseState(updatedIngredients);
-    // }
-
-    // removeIngredientHandler = (type) => {
-    //     let oldCount = this.props.ing[type]
-    //
-    //     if (oldCount <= 0) {
-    //         return;
-    //     }
-    //     const newCount = oldCount - 1;
-    //     const updatedIngredients = {
-    //         ...this.props.ing
-    //     }
-    //     updatedIngredients[type] = newCount
-    //     const oldPrice = this.props.price;
-    //     const newPrice = oldPrice - INGREDIENT_PRICE[type]
-    //     this.setState({ingredients: updatedIngredients, totalPrice: newPrice})
-    //     this.updatePurchaseState(updatedIngredients);
-    // }
-
     render() {
         const disableInfo = {
             ...this.props.ing
@@ -139,9 +108,9 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
     return {
-        ing: state.ingredients,
-        price: state.totalPrice,
-        error: state.error,
+        ing: state.bur.ingredients,
+        price: state.bur.totalPrice,
+        error: state.bur.error,
     }
 }
 
@@ -150,7 +119,6 @@ const mapDispatchToProps = dispatch => {
         onAddIngredient: (type) => dispatch(burgerBuilderActions.addIngredients(type)),
         onRemoveIngredient: (type) => dispatch(burgerBuilderActions.removeIngredients(type)),
         onInitIngreients: () => dispatch(burgerBuilderActions.initIngredients()),
-        //onFetchIngredients: (ingredients) => dispatch({type: actionTypes.FETCH_INGREDIENT, fetchIng:ingredients }),
     }
 }
 
