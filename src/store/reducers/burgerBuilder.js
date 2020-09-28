@@ -3,7 +3,8 @@ import * as actionTypes from "../actions/actionTypes"
 
 const initialState = {
     ingredients: null,
-    totalPrice: 4
+    totalPrice: 4,
+    error: false,
 };
 
 const INGREDIENT_PRICE = {
@@ -28,7 +29,7 @@ const burgerBuilder = (state = initialState, action) => {
         }
     } else if (action.type === actionTypes.REMOVE_INGREDIENT) {
         const oldCount = state.totalPrice;
-        const newPrice = oldCount - INGREDIENT_PRICE[action.ingredientName]
+        const newPrice = oldCount - INGREDIENT_PRICE[action.ingredientName];
         return {
             ...state,
             ingredients: {
@@ -37,14 +38,32 @@ const burgerBuilder = (state = initialState, action) => {
             },
             totalPrice: newPrice,
         }
-    }
-    else if (action.type === actionTypes.FETCH_INGREDIENT) {
-        console.log('1');
+    } else if (action.type === actionTypes.SET_INGREDIENTS) {
         return {
             ...state,
-            ingredients: action.fetchIng,
+            //order of burger ingredients;
+            ingredients: {
+                salad: action.ingredients.salad,
+                beacon: action.ingredients.beacon,
+                cheese: action.ingredients.cheese,
+                meat: action.ingredients.meat
+            },
+            error: false,
         }
-    } else {
+    } else if (action.type === actionTypes.FETCH_INGREDIENTS_FAILED) {
+        return {
+            ...state,
+            error: true,
+        }
+    }
+        // else if (action.type === actionTypes.FETCH_INGREDIENT) {
+        //     console.log('1');
+        //     return {
+        //         ...state,
+        //         ingredients: action.fetchIng,
+        //     }
+    // }
+    else {
         return state
     }
 };

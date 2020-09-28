@@ -22,22 +22,12 @@ const INGREDIENT_PRICE = {
 class BurgerBuilder extends Component {
     state = {
         modalVisibility: false,
-        loading: false,
-        error: null,
+       // loading: false,
+       // error: null,
     }
 
-    async componentDidMount() {
-        try {
-            const response = await axios.get('/ingredients.json');
-            this.props.onFetchIngredients(response.data);
-            // this.setState({
-            //     ingredients: response.data
-            // });
-        } catch (err) {
-            // this.setState({
-            //     error: true,
-            // });
-        }
+     componentDidMount() {
+        this.props.onInitIngreients();
     }
 
     showModal = () => {
@@ -53,20 +43,7 @@ class BurgerBuilder extends Component {
     }
 
     continuedHandler = () => {
-        // const queryParams = [];
-        // for (let i in this.props.ing) {
-        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.ing[i]))
-        //     // queryParams.push(i + '=' + this.props.ing[i])
-        // }
-        // queryParams.push('price=' + this.props.price);
-        // const queryString = queryParams.join('&');
-        // this.props.history.push({
-        //     pathname: '/checkout',
-        //     search: queryString,
-        // });
-
         this.props.history.push('/checkout');
-
     }
 
     updatePurchase(ingredients) {
@@ -120,7 +97,7 @@ class BurgerBuilder extends Component {
         }
         let orderSummary = null;
 
-        let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner/>;
+        let burger = this.props.error ? <p>Ingredients can't be loaded!</p> : <Spinner/>;
 
         if (this.props.ing) {
             burger = (
@@ -143,9 +120,9 @@ class BurgerBuilder extends Component {
                 ingredients={this.props.ing}/>
         }
 
-        if (this.state.loading) {
-            orderSummary = <Spinner/>
-        }
+        // if (this.state.loading) {
+        //     orderSummary = <Spinner/>
+        // }
 
         return (
             <Auxiliary>
@@ -163,7 +140,8 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
     return {
         ing: state.ingredients,
-        price: state.totalPrice
+        price: state.totalPrice,
+        error: state.error,
     }
 }
 
@@ -171,7 +149,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onAddIngredient: (type) => dispatch(burgerBuilderActions.addIngredients(type)),
         onRemoveIngredient: (type) => dispatch(burgerBuilderActions.removeIngredients(type)),
-        onFetchIngredients: (ingredients) => dispatch({type: actionTypes.FETCH_INGREDIENT, fetchIng:ingredients }),
+        onInitIngreients: () => dispatch(burgerBuilderActions.initIngredients()),
+        //onFetchIngredients: (ingredients) => dispatch({type: actionTypes.FETCH_INGREDIENT, fetchIng:ingredients }),
     }
 }
 

@@ -69,9 +69,9 @@ class ContactData extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'Your E-Mail'
+                    placeholder: 'vovanium@gmail.com'
                 },
-                value: '',
+                value: 'vovanium@gmail.com',
                 validation: {
                     required: true,
                     isEmail: true,
@@ -150,15 +150,12 @@ class ContactData extends Component {
             for (let formIdentifier in this.state.orderForm) {
                 formData[formIdentifier] = this.state.orderForm[formIdentifier].value
             }
-
-
             const order = {
                 ingredients:this.props.ing,
                 price: this.props.price,
                 orderData: formData
 
             }
-
             await axios.post('/orders.json', order);
 
             this.setState({
@@ -238,7 +235,6 @@ class ContactData extends Component {
         if (this.state.loading) {
             form = <Spinner/>
         }
-
         return (
             <div className={classes.ContactData}>
                 <h4>Enter your Contact Data</h4>
