@@ -2,9 +2,10 @@ export {
     addIngredients,
     removeIngredients,
     initIngredients,
-} from "./burgerBuilder"
+} from "./burgerBuildderAc"
 
 export {
     purchaseBurger,
     purchaseInit,
-} from "./order"
+    fetchOrders,
+} from "./orderActionCreator"

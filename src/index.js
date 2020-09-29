@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import burgerBuilderReducer from "./store/reducers/burgerBuilder"
-import orderReducer from "./store/reducers/order";
+import burgerBuilderReducer from "./store/reducers/burgerBuilderReducer"
+import orderReducer from "./store/reducers/orderReducer";
 import {createStore, applyMiddleware, compose, combineReducers} from "redux";
 import {Provider} from "react-redux";
 import thunk from 'redux-thunk';

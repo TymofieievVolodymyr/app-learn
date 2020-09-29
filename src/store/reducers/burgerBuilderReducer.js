@@ -15,7 +15,8 @@ const INGREDIENT_PRICE = {
 }
 
 
-const burgerBuilder = (state = initialState, action) => {
+const burgerBuilderReducer = (state = initialState, action) => {
+
     if (action.type === actionTypes.ADD_INGREDIENT) {
         const oldCount = state.totalPrice;
         const newPrice = oldCount + INGREDIENT_PRICE[action.ingredientName]
@@ -49,6 +50,7 @@ const burgerBuilder = (state = initialState, action) => {
                 meat: action.ingredients.meat
             },
             error: false,
+            totalPrice: 4,
         }
     } else if (action.type === actionTypes.FETCH_INGREDIENTS_FAILED) {
         return {
@@ -61,4 +63,4 @@ const burgerBuilder = (state = initialState, action) => {
     }
 };
 
-export default burgerBuilder;
+export default burgerBuilderReducer;

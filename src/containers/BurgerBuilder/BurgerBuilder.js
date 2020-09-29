@@ -9,7 +9,7 @@ import axios from "../../axios-orders";
 import Spinner from "../../componentns/UI/Spinner/Spinner"
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import * as burgerBuilderActions from "../../store/actions/index"
-import * as actionTypes from "../../store/actions/actionTypes"
+//import * as actionTypes from "../../store/actions/actionTypes"
 import {connect} from "react-redux";
 
 const INGREDIENT_PRICE = {
@@ -27,7 +27,7 @@ class BurgerBuilder extends Component {
     }
 
      componentDidMount() {
-        this.props.onInitIngreients();
+        this.props.onInitIngredients();
     }
 
     showModal = () => {
@@ -120,7 +120,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onAddIngredient: (type) => dispatch(burgerBuilderActions.addIngredients(type)),
         onRemoveIngredient: (type) => dispatch(burgerBuilderActions.removeIngredients(type)),
-        onInitIngreients: () => dispatch(burgerBuilderActions.initIngredients()),
+        onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
         onInitPurchase: () => dispatch(burgerBuilderActions.purchaseInit())
     }
 }

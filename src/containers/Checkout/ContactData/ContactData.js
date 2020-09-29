@@ -71,14 +71,14 @@ class ContactData extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'vovanium@gmail.com'
+                    placeholder: 'Enter your E-mail'
                 },
-                value: 'vovanium@gmail.com',
+                value: 'Vovanum@gmail.com',
                 validation: {
                     required: true,
                     isEmail: true,
                 },
-                //valid: false,
+                valid: true,
                 touched: false,
             },
             withGift: {
@@ -127,10 +127,10 @@ class ContactData extends Component {
             isValid = value.length <= rules.maxLength && isValid
         }
 
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
+        // if (rules.isEmail) {
+        //     const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+        //     isValid = pattern.test(value) && isValid
+        // }
 
         if (rules.isNumeric) {
             const pattern = /^\d+$/;

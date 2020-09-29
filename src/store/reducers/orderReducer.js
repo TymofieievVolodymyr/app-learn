@@ -34,6 +34,22 @@ const orderReducer = (state = initialState, action) => {
             ...state,
             loading: false,
         }
+    } else if (action.type === actionTypes.FETCH_ORDERS_START) {
+        return {
+            ...state,
+            loading: true,
+        }
+    } else if (action.type === actionTypes.FETCH_ORDERS_SUCCESS) {
+        return {
+            ...state,
+            loading: false,
+            orders: action.orders,
+        }
+    } else if (action.type === actionTypes.FETCH_ORDERS_FAIL) {
+        return {
+            ...state,
+            loading: false,
+        }
     } else {
         return state
     }
