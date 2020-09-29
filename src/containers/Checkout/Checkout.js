@@ -22,27 +22,30 @@ class Checkout extends Component {
         let checkoutSummary = <Redirect to={'/'}/>
 
         if (this.props.ing) {
-        checkoutSummary = (
-            <div>
-                <CheckoutSummary
-                    ingredients={this.props.ing}
-                    checkoutClose={this.checkoutCloseHandler}
-                    checkoutContinue={this.checkoutContinueHandler}/>
-                <Route
-                    path={this.props.match.path + '/contact-data'} component={ContactData}
-                />
-            </div>
-        );
+            const purchasedRedirect = this.props.purchased ? <Redirect to={'/'}/> : null;
+            checkoutSummary = (
+                <div>
+                    {purchasedRedirect}
+                    <CheckoutSummary
+                        ingredients={this.props.ing}
+                        checkoutClose={this.checkoutCloseHandler}
+                        checkoutContinue={this.checkoutContinueHandler}/>
+                    <Route
+                        path={this.props.match.path + '/contact-data'} component={ContactData}
+                    />
+                </div>
+            );
 
         }
 
-        return  checkoutSummary;
+        return checkoutSummary;
     }
 }
 
 const mapStateToProps = state => {
     return {
         ing: state.bur.ingredients,
+        purchased: state.ord.purchased,
     }
 }
 

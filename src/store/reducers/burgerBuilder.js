@@ -56,13 +56,6 @@ const burgerBuilder = (state = initialState, action) => {
             error: true,
         }
     }
-        // else if (action.type === actionTypes.FETCH_INGREDIENT) {
-        //     console.log('1');
-        //     return {
-        //         ...state,
-        //         ingredients: action.fetchIng,
-        //     }
-    // }
     else {
         return state
     }

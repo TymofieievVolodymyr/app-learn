@@ -78,7 +78,7 @@ class ContactData extends Component {
                     required: true,
                     isEmail: true,
                 },
-                valid: false,
+                //valid: false,
                 touched: false,
             },
             withGift: {
@@ -109,9 +109,7 @@ class ContactData extends Component {
                 touched: false,
             }
         },
-        //loading: false,
         isValid: false
-
     }
 
     contactDataCheckValidity(value, rules) {

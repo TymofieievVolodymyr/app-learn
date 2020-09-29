@@ -22,13 +22,19 @@ export const purchaseBurgerStart = () => {
     }
 }
 
+export const purchaseInit = () => {
+    return {
+        type: actionTypes.PURCHASE_INIT
+    };
+};
+
+
 export const purchaseBurger = (order) => {
     return async dispatch => {
         dispatch( purchaseBurgerStart());
         try {
             const response = await axios.post('/orders.json', order);
-            console.log(response.data);
-            dispatch(purchaseBurgerSuccess(response.data, order));
+            dispatch(purchaseBurgerSuccess(response.data.name, order));
         } catch (err) {
             dispatch(purchaseBurgerFail(err));
         }
