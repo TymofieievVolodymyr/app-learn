@@ -15,6 +15,10 @@ const navigationItems = (props) => (
         >
             Orders
         </NavigationItem>
+        <NavigationItem link={'/auth'}
+        >
+            Auth
+        </NavigationItem>
     </ul>
 );
 

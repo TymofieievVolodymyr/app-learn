@@ -1,7 +1,10 @@
-import React, {Component} from "react";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import Button from "../../componentns/UI/Button/Button"
 import Input from "../../componentns/UI/Input/Input"
 import classes from "./Auth.module.css"
+import * as actions from '../../store/actions/index';
 
 class Auth extends Component {
     state = {
@@ -10,37 +13,38 @@ class Auth extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'Enter your E-mail'
+                    placeholder: 'Mail Address'
                 },
                 value: '',
                 validation: {
                     required: true,
-                    isEmail: true,
+                    isEmail: true
                 },
                 valid: false,
-                touched: false,
+                touched: false
             },
             password: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
-                    placeholder: 'Enter your password'
+                    placeholder: 'Password'
                 },
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 6,
+                    minLength: 6
                 },
                 valid: false,
-                touched: false,
-            },
+                touched: false
+            }
         }
     }
 
-    authCheckValidity(value, rules) {
-
-
+    checkValidity(value, rules) {
         let isValid = true;
+        if (!rules) {
+            return true;
+        }
 
         if (rules.required) {
             isValid = value.trim() !== '' && isValid;
@@ -50,56 +54,51 @@ class Auth extends Component {
             isValid = value.length >= rules.minLength && isValid
         }
 
+        if (rules.maxLength) {
+            isValid = value.length <= rules.maxLength && isValid
+        }
+
         if (rules.isEmail) {
             const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
             isValid = pattern.test(value) && isValid
         }
 
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid
+        if (rules.isNumeric) {
+            const pattern = /^\d+$/;
+            isValid = pattern.test(value) && isValid
         }
-
 
         return isValid;
     }
 
-    authSubmitHandler = (event) => {
-        event.preventDefault();
-
-
-    };
-
-    authInputChangedHandler = (event, controlName) => {
-        const updatedAuthForm = {
+    inputChangedHandler = (event, controlName) => {
+        const updatedControls = {
             ...this.state.controls,
             [controlName]: {
                 ...this.state.controls[controlName],
                 value: event.target.value,
-                touched: true,
-                valid: this.authCheckValidity(event.target.value, this.state.controls[controlName].validation),
+                valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+                touched: true
             }
-        }
-        console.log(updatedAuthForm);
-
-        this.setState({
-            controls: updatedAuthForm,
-        });
+        };
+        this.setState({controls: updatedControls});
     }
 
-    render() {
+    submitHandler = (event) => {
+        event.preventDefault();
+        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value);
+    }
+
+    render () {
         const formElementsArray = [];
-        for (let key in this.state.controls) {
-            formElementsArray.push({
+        for ( let key in this.state.controls ) {
+            formElementsArray.push( {
                 id: key,
                 config: this.state.controls[key]
-            });
+            } );
         }
 
-        console.log(formElementsArray);
-
-
-
-        const form = formElementsArray.map(formElement => (
+        const form = formElementsArray.map( formElement => (
             <Input
                 key={formElement.id}
                 elementType={formElement.config.elementType}
@@ -108,20 +107,18 @@ class Auth extends Component {
                 invalid={!formElement.config.valid}
                 shouldValidate={formElement.config.validation}
                 touched={formElement.config.touched}
-                changed={(event) => this.authInputChangedHandler(event, formElement.id)}/>
-        ));
+                changed={( event ) => this.inputChangedHandler( event, formElement.id )} />
+        ) );
 
         return (
             <div className={classes.Auth}>
-                <form onSubmit={this.authSubmitHandler}>
+                <form onSubmit={this.submitHandler}>
                     {form}
                     <Button btnType="Success">SUBMIT</Button>
                 </form>
             </div>
         );
     }
-
-
 }
 
 export default Auth;
