@@ -49,10 +49,10 @@ class ContactData extends Component {
                     required: true,
                     minLength: 2,
                     maxLength: 5,
+                    isNumeric: true,
                 },
                 valid: false,
                 touched: false,
-                isNumeric: true,
             },
             country: {
                 elementType: 'input',
@@ -113,7 +113,9 @@ class ContactData extends Component {
     }
 
     contactDataCheckValidity(value, rules) {
+
         let isValid = true;
+        console.log(rules.isNumeric);
 
         if (rules.required) {
             isValid = value.trim() !== '' && isValid;
@@ -133,8 +135,11 @@ class ContactData extends Component {
         // }
 
         if (rules.isNumeric) {
+            console.log('Checking here!!!!');
             const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid
+            let foo = pattern.test(value);
+            console.log(foo);
+            isValid = foo && isValid;
         }
 
         return isValid;
@@ -175,6 +180,7 @@ class ContactData extends Component {
         }
         updatedFormElement.touched = true;
         updatedFormElement.valid = this.contactDataCheckValidity(updatedFormElement.value, updatedFormElement.validation);
+        console.log(updatedFormElement.valid);
         updatedForm[inputIdentifier] = updatedFormElement;
 
         let verifiedForm = true;
