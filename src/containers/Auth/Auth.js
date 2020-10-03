@@ -42,6 +42,11 @@ class Auth extends Component {
         },
         isSignup: true,
     }
+    // componentDidUpdate() {
+    //     if (this.props.isAuth) {
+    //         this.props.history.push('/');
+    //     }
+    // }
 
     checkValidity(value, rules) {
         let isValid = true;
@@ -92,11 +97,6 @@ class Auth extends Component {
         console.log('SubmitHandler fired!')
         this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value, this.state.isSignup);
 
-        console.log(this.props.isAuth);
-        if (this.props.isAuth) {
-            console.log('1');
-            this.props.history.push('/');
-        }
     }
 
     switchAuthModelHandler = (event) => {

@@ -22,18 +22,21 @@ const INGREDIENT_PRICE = {
 class BurgerBuilder extends Component {
     state = {
         modalVisibility: false,
-       // loading: false,
-       // error: null,
+        //purchasing: false,
+        // loading: false,
+        // error: null,
     }
 
-     componentDidMount() {
+    componentDidMount() {
         this.props.onInitIngredients();
     }
 
     showModal = () => {
-        this.setState(
-            {modalVisibility: true}
-        );
+        if (this.props.isAuth) {
+            this.setState({modalVisibility: true,});
+        } else {
+            this.props.history.push('/auth')
+        }
     }
 
     closeHandler = () => {
@@ -80,6 +83,7 @@ class BurgerBuilder extends Component {
                         disable={disableInfo}
                         purchasable={this.updatePurchase(this.props.ing)}
                         price={this.props.price}
+                        isAuth={this.props.isAuth}
                         showModal={this.showModal}/>
                 </Auxiliary>
             );
@@ -113,6 +117,7 @@ const mapStateToProps = state => {
         price: state.bur.totalPrice,
         error: state.bur.error,
         purchased: state.ord.purchased,
+        isAuth: state.auth.token !== null,
     }
 }
 
@@ -121,7 +126,7 @@ const mapDispatchToProps = dispatch => {
         onAddIngredient: (type) => dispatch(burgerBuilderActions.addIngredients(type)),
         onRemoveIngredient: (type) => dispatch(burgerBuilderActions.removeIngredients(type)),
         onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
-        onInitPurchase: () => dispatch(burgerBuilderActions.purchaseInit())
+        onInitPurchase: () => dispatch(burgerBuilderActions.purchaseInit()),
     }
 }
 
