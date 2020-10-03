@@ -4,7 +4,7 @@ import {updateObject} from "../../utility"
 const initialState = {
     orders: [],
     loading: false,
-    purchased: false
+    purchased: false // если сделали заказ, то {purchased: true} и идет редирект;
 };
 
 const purchaseInit = ( state, action ) => {

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import Button from "../../componentns/UI/Button/Button"
-import Input from "../../componentns/UI/Input/Input"
-import classes from "./Auth.module.css"
+import Button from "../../componentns/UI/Button/Button";
+import Input from "../../componentns/UI/Input/Input";
+import classes from "./Auth.module.css";
 import * as actions from '../../store/actions/index';
-import Spinner from "../../componentns/UI/Spinner/Spinner"
+import Spinner from "../../componentns/UI/Spinner/Spinner";
+import {Redirect} from "react-router-dom";
 
 class Auth extends Component {
     state = {
@@ -90,6 +91,12 @@ class Auth extends Component {
         event.preventDefault();
         console.log('SubmitHandler fired!')
         this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value, this.state.isSignup);
+
+        console.log(this.props.isAuth);
+        if (this.props.isAuth) {
+            console.log('1');
+            this.props.history.push('/');
+        }
     }
 
     switchAuthModelHandler = (event) => {
@@ -131,8 +138,11 @@ class Auth extends Component {
             console.log(this.props.error);
         }
 
+        const authRedirect = this.props.isAuth ? <Redirect to={'/'}/> : null
+
         return (
             <div className={classes.Auth}>
+                {authRedirect}
                 {errorMessage}
                 <form onSubmit={this.submitHandler}>
                     {form}
@@ -148,7 +158,8 @@ class Auth extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.auth.loading,
-        error: state.auth.error
+        error: state.auth.error,
+        isAuth: state.auth.token !== null,
     }
 }
 
