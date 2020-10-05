@@ -8,7 +8,7 @@ import OrderSummary from "../../componentns/Burger/OrderSummary/OrderSummary";
 import axios from "../../axios-orders";
 import Spinner from "../../componentns/UI/Spinner/Spinner"
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
-import * as burgerBuilderActions from "../../store/actions/index"
+import * as action from "../../store/actions/index"
 //import * as actionTypes from "../../store/actions/actionTypes"
 import {connect} from "react-redux";
 
@@ -35,6 +35,7 @@ class BurgerBuilder extends Component {
         if (this.props.isAuth) {
             this.setState({modalVisibility: true,});
         } else {
+            this.props.onSetAuthRedirectPath('/checkout')
             this.props.history.push('/auth')
         }
     }
@@ -123,10 +124,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAddIngredient: (type) => dispatch(burgerBuilderActions.addIngredients(type)),
-        onRemoveIngredient: (type) => dispatch(burgerBuilderActions.removeIngredients(type)),
-        onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
-        onInitPurchase: () => dispatch(burgerBuilderActions.purchaseInit()),
+        onAddIngredient: (type) => dispatch(action.addIngredients(type)),
+        onRemoveIngredient: (type) => dispatch(action.removeIngredients(type)),
+        onInitIngredients: () => dispatch(action.initIngredients()),
+        onInitPurchase: () => dispatch(action.purchaseInit()),
+        onSetAuthRedirectPath: (path) => dispatch(action.setAuthRedirectPath(path)),
     }
 }
 

@@ -6,11 +6,21 @@ import BurgerBuilder from "./containers/BurgerBuilder/BurgerBuilder";
 import Auth from "./containers/Auth/Auth";
 import Logout from "./containers/Auth/Logout/Logout"
 import Checkout from "./containers/Checkout/Checkout"
-import {Route, BrowserRouter, Switch} from "react-router-dom";
+import {Route, BrowserRouter, Switch, Redirect} from "react-router-dom";
 import Orders from "./containers/Orders/Orders";
+import {connect} from "react-redux"
+import * as action from "./store/actions/index"
 
 class App extends Component {
+
+    componentDidMount() {
+        this.props.onAutoSignedUp();
+    }
+
     render() {
+
+
+
         return (
             <div>
                 <BrowserRouter>
@@ -29,4 +39,10 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+    return {
+        onAutoSignedUp: () => dispatch(action.authCheckState()),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(App);

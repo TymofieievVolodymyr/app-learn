@@ -7,6 +7,7 @@ import classes from "./Auth.module.css";
 import * as actions from '../../store/actions/index';
 import Spinner from "../../componentns/UI/Spinner/Spinner";
 import {Redirect} from "react-router-dom";
+import * as action from "../../store/actions";
 
 class Auth extends Component {
     state = {
@@ -45,6 +46,18 @@ class Auth extends Component {
     // componentDidUpdate() {
     //     if (this.props.isAuth) {
     //         this.props.history.push('/');
+    //     }
+    // }
+
+    componentDidMount() {
+        if (!this.props.buildBurger && this.props.authRedirectPath !== '/') {
+            this.props.onSetAuthRedirectPath('/');
+        }
+    }
+
+    // componentWillUnmount() {
+    //     if (!this.props.buildBurger && this.props.authRedirectPath !== '/') {
+    //         this.props.onSetAuthRedirectPath();
     //     }
     // }
 
@@ -138,7 +151,7 @@ class Auth extends Component {
             console.log(this.props.error);
         }
 
-        const authRedirect = this.props.isAuth ? <Redirect to={'/'}/> : null
+        const authRedirect = this.props.isAuth ? <Redirect to={this.props.authRedirectPath}/> : null
 
         return (
             <div className={classes.Auth}>
@@ -160,12 +173,15 @@ const mapStateToProps = state => {
         loading: state.auth.loading,
         error: state.auth.error,
         isAuth: state.auth.token !== null,
+        buildBurger: state.bur.building,
+        authRedirectPath: state.auth.authRedirectPath,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup)),
+        onSetAuthRedirectPath: (path) => dispatch(action.setAuthRedirectPath(path)),
     }
 }
 
