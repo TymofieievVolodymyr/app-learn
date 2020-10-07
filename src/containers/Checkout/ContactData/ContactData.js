@@ -8,6 +8,7 @@ import Input from "../../../componentns/UI/Input/Input"
 import {connect} from "react-redux";
 import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
 import * as actionCreator from "../../../store/actions/index"
+import {updateObject, сheckValidity} from "../../../shared/utility";
 
 class ContactData extends Component {
     state = {
@@ -112,38 +113,7 @@ class ContactData extends Component {
         isValid: false
     }
 
-    contactDataCheckValidity(value, rules) {
 
-        let isValid = true;
-        console.log(rules.isNumeric);
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid
-        }
-
-        // if (rules.isEmail) {
-        //     const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-        //     isValid = pattern.test(value) && isValid
-        // }
-
-        if (rules.isNumeric) {
-            console.log('Checking here!!!!');
-            const pattern = /^\d+$/;
-            let foo = pattern.test(value);
-            console.log(foo);
-            isValid = foo && isValid;
-        }
-
-        return isValid;
-    }
 
     contactDataOrderHandler = async (event) => {
         event.preventDefault();
@@ -157,40 +127,37 @@ class ContactData extends Component {
             ingredients: this.props.ing,
             price: this.props.price,
             orderData: formData,
+            userId: this.props.userId,
         }
 
         this.props.onOrderBurger(order, this.props.token);
     }
 
-
     contactDataChangedHandler = (event, inputIdentifier) => {
 
-        const updatedForm = {
-            ...this.state.orderForm
-        }
-        const updatedFormElement = {
-            ...updatedForm[inputIdentifier]
-        }
+
+        const updatedFormElement = updateObject(this.state.orderForm[inputIdentifier], {
+            value: event.target.value,
+            valid: сheckValidity(event.target.value, this.state.orderForm[inputIdentifier].validation),
+            touched: true
+        });
+
         if (event.target.type === 'checkbox') {
-            //console.log(event.target.checked);
             updatedFormElement.value = event.target.checked;
         } else {
             updatedFormElement.value = event.target.value;
-            console.log(updatedFormElement.value);
+
         }
-        updatedFormElement.touched = true;
-        updatedFormElement.valid = this.contactDataCheckValidity(updatedFormElement.value, updatedFormElement.validation);
-        console.log(updatedFormElement.valid);
-        updatedForm[inputIdentifier] = updatedFormElement;
+
+        const updatedForm = updateObject(this.state.orderForm, {
+            [inputIdentifier]: updatedFormElement
+        })
 
         let verifiedForm = true;
         for (let key in updatedForm) {
             verifiedForm = updatedForm[key].valid && verifiedForm;
         }
 
-        console.log(verifiedForm);
-
-        //console.log(updatedForm);
         this.setState({
             orderForm: updatedForm,
             isValid: verifiedForm,
@@ -242,6 +209,7 @@ const mapStateToProps = state => {
         price: state.bur.totalPrice,
         loading: state.ord.loading,
         token: state.auth.token,
+        userId: state.auth.userId,
     }
 }
 

@@ -27,10 +27,10 @@ class Layout extends Component {
     render() {
         return (
             <Auxiliary>
-                <Toolbar auth = {this.props.isAuthenticated}
+                <Toolbar auth={this.props.isAuthenticated}
                          toggle={this.toggleMenuHandler}/>
                 <SideDrawer
-                    auth = {this.props.isAuthenticated}
+                    auth={this.props.isAuthenticated}
                     open={this.state.showSideDrawer}
                     closed={this.sideDrawerClosedHandler}/>
                 <main className={classes.Content}>
