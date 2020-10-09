@@ -29,13 +29,7 @@ export const  fetchIngredientsFailed = () => {
 }
 
 export const initIngredients =  () => {
-    return async dispatch => {
-        try {
-            const response = await axios.get('/ingredients.json');
-            dispatch(setIngredients(response.data));
-        } catch (err) {
-            dispatch(fetchIngredientsFailed());
-            console.log(err);
-        }
+    return {
+        type: actionTypes.INIT_INGREDIENTS
     }
 }
