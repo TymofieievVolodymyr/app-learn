@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 
 import Layout from "./hoc/Layout/Layout";
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
@@ -24,13 +24,12 @@ const asyncOrders = asyncComponent(()=>{
     return import("./containers/Orders/Orders")
 });
 
-class App extends Component {
+const App = props => {
 
-    componentDidMount() {
-        this.props.onAutoSignedUp();
-    }
+    useEffect(() => {
+        props.onAutoSignedUp();
+    })
 
-    render() {
         let routes = (
             <Switch>
                 <Route path='/auth' component={asyncAuth}/>
@@ -39,7 +38,7 @@ class App extends Component {
             </Switch>
         );
 
-        if (this.props.isAuth) {
+        if (props.isAuth) {
             routes = (
                 <Switch>
                     <Route path='/checkout' component={asyncCheckout}/>
@@ -61,7 +60,7 @@ class App extends Component {
                 </BrowserRouter>
             </div>
         );
-    }
+
 }
 
 const mapStateToProps = state => {
