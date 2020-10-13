@@ -29,6 +29,10 @@ const App = props => {
         props.onAutoSignedUp();
     }, [])
 
+    // componentDidMount() {
+    //     this.props.onAutoSignedUp();
+    // }
+
     let routes = (
         <Switch>
             <Route path='/auth' render={() => <Auth/>}/>
