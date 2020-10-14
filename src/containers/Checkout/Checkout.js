@@ -1,43 +1,41 @@
-import React, {Component} from "react";
+import React from "react";
 
 import CheckoutSummary from "../../componentns/Order/CheckoutSummary/CheckoutSummary"
 //import axios from "../../axios-orders";
-import {Route, Redirect} from "react-router-dom";
+import {Route, Redirect, withRouter} from "react-router-dom";
 import ContactData from "./ContactData/ContactData"
 import {connect} from "react-redux";
 
-class Checkout extends Component {
+const Checkout = props => {
 
-    checkoutCloseHandler = () => {
-        this.props.history.goBack();
+    const checkoutCloseHandler = () => {
+        props.history.goBack();
     }
 
-    checkoutContinueHandler = () => {
-        this.props.history.replace('/checkout/contact-data');
+    const checkoutContinueHandler = () => {
+        props.history.replace('/checkout/contact-data');
     }
 
-    render() {
-        let checkoutSummary = <Redirect to={'/'}/>
+    let checkoutSummary = <Redirect to={'/'}/>
 
-        if (this.props.ing) {
-            const purchasedRedirect = this.props.purchased ? <Redirect to={'/'}/> : null;
-            checkoutSummary = (
-                <div>
-                    {purchasedRedirect}
-                    <CheckoutSummary
-                        ingredients={this.props.ing}
-                        checkoutClose={this.checkoutCloseHandler}
-                        checkoutContinue={this.checkoutContinueHandler}/>
-                    <Route
-                        path={this.props.match.path + '/contact-data'} component={ContactData}
-                    />
-                </div>
-            );
+    if (props.ing) {
+        const purchasedRedirect = props.purchased ? <Redirect to={'/'}/> : null;
+        checkoutSummary = (
+            <div>
+                {purchasedRedirect}
+                <CheckoutSummary
+                    ingredients={props.ing}
+                    checkoutClose={checkoutCloseHandler}
+                    checkoutContinue={checkoutContinueHandler}/>
+                <Route
+                    path={props.match.path + '/contact-data'} component={ContactData}
+                />
+            </div>
+        );
 
-        }
-
-        return checkoutSummary;
     }
+
+    return checkoutSummary;
 }
 
 const mapStateToProps = state => {
@@ -47,7 +45,7 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(Checkout);
+export default connect(mapStateToProps)(withRouter(Checkout));
 
 
 
