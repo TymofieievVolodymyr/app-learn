@@ -1,43 +1,32 @@
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 import classes from './Modal.module.css'
 import Auxiliary from "../../../hoc/Auxiliary/Auxiliary";
 import Backdrop from "../Backdrop/Backdrop"
 
-class Modal extends Component {
+const Modal = props => {
 
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    // shouldComponentUpdate ( nextProps, nextState ) {
     //     return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
     // }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return nextProps.show !== this.props.show;
-    }
-
-    // componentWillUpdate() {
-    //     console.log('[Modal] WillUpdate');
-    // }
-
-    componentDidUpdate() {
-        console.log('[Modal] DidUpdate');
-    }
-
-    render() {
-        return (
-            <Auxiliary>
-                <Backdrop
-                    show={this.props.show}
-                    clicked={this.props.close}
-                />
-                <div
-                    className={classes.Modal}
-                    style={{
-                        transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
-                        opacity: this.props.show ? '1' : '0'
-                    }}>
-                    {this.props.children}
-                </div>
-            </Auxiliary>
-        )
-    };
+    return (
+        <Auxiliary>
+            <Backdrop
+                show={props.show}
+                clicked={props.close}
+            />
+            <div
+                className={classes.Modal}
+                style={{
+                    transform: props.show ? 'translateY(0)' : 'translateY(-100vh)',
+                    opacity: props.show ? '1' : '0'
+                }}>
+                {props.children}
+            </div>
+        </Auxiliary>
+    )
 };
-export default Modal;
+export default React.memo(Modal, (prevProps, nextProps) =>
+    nextProps.show === prevProps.show &&
+    nextProps.children === prevProps.children
+);
