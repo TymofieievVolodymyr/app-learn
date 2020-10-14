@@ -1,8 +1,7 @@
 import React from "react";
 
 import CheckoutSummary from "../../componentns/Order/CheckoutSummary/CheckoutSummary"
-//import axios from "../../axios-orders";
-import {Route, Redirect, withRouter} from "react-router-dom";
+import {Route, Redirect} from "react-router-dom";
 import ContactData from "./ContactData/ContactData"
 import {connect} from "react-redux";
 
@@ -45,7 +44,7 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(withRouter(Checkout));
+export default connect(mapStateToProps)(Checkout);
 
 
 
