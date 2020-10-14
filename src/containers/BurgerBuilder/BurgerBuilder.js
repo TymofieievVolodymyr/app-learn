@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {useState, useEffect} from "react";
 
 import Auxiliary from "../../hoc/Auxiliary/Auxiliary";
 import Burger from "../../componentns/Burger/Burger";
@@ -9,49 +9,35 @@ import axios from "../../axios-orders";
 import Spinner from "../../componentns/UI/Spinner/Spinner"
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import * as action from "../../store/actions/index"
-//import * as actionTypes from "../../store/actions/actionTypes"
 import {connect} from "react-redux";
 
-const INGREDIENT_PRICE = {
-    meat: 1.3,
-    cheese: 0.4,
-    beacon: 0.7,
-    salad: 0.5,
-}
+const BurgerBuilder = props => {
 
-class BurgerBuilder extends Component {
-    state = {
-        modalVisibility: false,
-        //purchasing: false,
-        // loading: false,
-        // error: null,
-    }
+    const [modalVisibility, setModalVisibility] = useState(false);
 
-    componentDidMount() {
-        this.props.onInitIngredients();
-    }
+    useEffect(() => {
+        props.onInitIngredients();
+    }, [])
 
-    showModal = () => {
-        if (this.props.isAuth) {
-            this.setState({modalVisibility: true,});
+    const showModal = () => {
+        if (props.isAuth) {
+            setModalVisibility(true);
         } else {
-            this.props.onSetAuthRedirectPath('/checkout')
-            this.props.history.push('/auth')
+            props.onSetAuthRedirectPath('/checkout')
+            props.history.push('/auth')
         }
     }
 
-    closeHandler = () => {
-        this.setState(
-            {modalVisibility: false}
-        );
+    const closeHandler = () => {
+        setModalVisibility(false);
     }
 
-    continuedHandler = () => {
-        this.props.onInitPurchase();
-        this.props.history.push('/checkout');
+    const continuedHandler = () => {
+        props.onInitPurchase();
+        props.history.push('/checkout');
     }
 
-    updatePurchase(ingredients) {
+    function updatePurchase(ingredients) {
         const sum = Object.keys(ingredients)
             .map(igKey => {
                 return ingredients[igKey]
@@ -62,54 +48,50 @@ class BurgerBuilder extends Component {
         return sum > 0
     }
 
-    render() {
-        const disableInfo = {
-            ...this.props.ing
-        }
-        for (const key in disableInfo) {
-            disableInfo[key] = disableInfo[key] === 0
-        }
-        let orderSummary = null;
+    const disableInfo = {
+        ...props.ing
+    }
 
-        let burger = this.props.error ? <p>Ingredients can't be loaded!</p> : <Spinner/>;
+    for (const key in disableInfo) {
+        disableInfo[key] = disableInfo[key] === 0
+    }
 
-        if (this.props.ing) {
-            burger = (
-                <Auxiliary>
-                    <Burger ingredients={this.props.ing}/>
-                    <BuildControls
-                        // ingredients={this.props.ing}
-                        addMore={this.props.onAddIngredient}
-                        lessIng={this.props.onRemoveIngredient}
-                        disable={disableInfo}
-                        purchasable={this.updatePurchase(this.props.ing)}
-                        price={this.props.price}
-                        isAuth={this.props.isAuth}
-                        showModal={this.showModal}/>
-                </Auxiliary>
-            );
-            orderSummary = <OrderSummary
-                price={this.props.price}
-                close={this.closeHandler}
-                continue={this.continuedHandler}
-                ingredients={this.props.ing}/>
-        }
+    let orderSummary = null;
 
-        // if (this.state.loading) {
-        //     orderSummary = <Spinner/>
-        // }
+    let burger = props.error ? <p>Ingredients can't be loaded!</p> : <Spinner/>;
 
-        return (
+    if (props.ing) {
+        burger = (
             <Auxiliary>
-                <Modal
-                    show={this.state.modalVisibility}
-                    close={this.closeHandler}>
-                    {orderSummary}
-                </Modal>
-                {burger}
+                <Burger ingredients={props.ing}/>
+                <BuildControls
+                    addMore={props.onAddIngredient}
+                    lessIng={props.onRemoveIngredient}
+                    disable={disableInfo}
+                    purchasable={updatePurchase(props.ing)}
+                    price={props.price}
+                    isAuth={props.isAuth}
+                    showModal={showModal}/>
             </Auxiliary>
         );
+
+        orderSummary = <OrderSummary
+            price={props.price}
+            close={closeHandler}
+            continue={continuedHandler}
+            ingredients={props.ing}/>
     }
+
+    return (
+        <Auxiliary>
+            <Modal
+                show={modalVisibility}
+                close={closeHandler}>
+                {orderSummary}
+            </Modal>
+            {burger}
+        </Auxiliary>
+    );
 }
 
 const mapStateToProps = state => {

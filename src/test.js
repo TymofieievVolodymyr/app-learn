@@ -1,127 +1,123 @@
-import React, {Component} from "react";
-import Button from "../../componentns/UI/Button/Button"
-import Input from "../../componentns/UI/Input/Input"
-import classes from "./Auth.module.css"
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 
-class Auth extends Component {
-    state = {
-        controls: {
-            email: {
-                elementType: 'input',
-                elementConfig: {
-                    type: 'email',
-                    placeholder: 'Enter your E-mail'
-                },
-                value: '',
-                validation: {
-                    required: true,
-                    isEmail: true,
-                },
-                valid: false,
-                touched: false,
-            },
-            password: {
-                elementType: 'input',
-                elementConfig: {
-                    type: 'password',
-                    placeholder: 'Enter your password'
-                },
-                value: '',
-                validation: {
-                    required: true,
-                    minLength: 6,
-                },
-                valid: false,
-                touched: false,
-            },
-        }
-    }
+import Aux from '../../hoc/Aux/Aux';
+import Burger from '../../components/Burger/Burger';
+import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../store/actions/index';
+import axios from '../../axios-orders';
 
-    authCheckValidity(value, rules) {
+const burgerBuilder = props => {
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {...}
+    // }
+    const [purchasing, setPurchasing] = useState(false);
 
+    useEffect(() => {
+        props.onInitIngredients();
+    }, []);
 
-        let isValid = true;
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid
-        }
-
-
-        return isValid;
-    }
-
-    authSubmitHandler = (event) => {
-        event.preventDefault();
-
-
+    const updatePurchaseState = ingredients => {
+        const sum = Object.keys(ingredients)
+            .map(igKey => {
+                return ingredients[igKey];
+            })
+            .reduce((sum, el) => {
+                return sum + el;
+            }, 0);
+        return sum > 0;
     };
 
-    authInputChangedHandler = (event, controlName) => {
-        const updatedAuthForm = {
-            ...this.state.controls,
-            [controlName]: {
-                ...this.state.controls[controlName],
-                value: event.target.value,
-                touched: true,
-                valid: this.authCheckValidity(event.target.value, this.state.controls[controlName].validation),
-            }
+    const purchaseHandler = () => {
+        if (props.isAuthenticated) {
+            setPurchasing(true);
+        } else {
+            props.onSetAuthRedirectPath('/checkout');
+            props.history.push('/auth');
         }
-        console.log(updatedAuthForm);
+    };
 
-        this.setState({
-            controls: updatedAuthForm,
-        });
+    const purchaseCancelHandler = () => {
+        setPurchasing(false);
+    };
+
+    const purchaseContinueHandler = () => {
+        props.onInitPurchase();
+        props.history.push('/checkout');
+    };
+
+    const disabledInfo = {
+        ...props.ings
+    };
+    for (let key in disabledInfo) {
+        disabledInfo[key] = disabledInfo[key] <= 0;
     }
+    let orderSummary = null;
+    let burger = props.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
 
-    render() {
-        const formElementsArray = [];
-        for (let key in this.state.controls) {
-            formElementsArray.push({
-                id: key,
-                config: this.state.controls[key]
-            });
-        }
-
-        console.log(formElementsArray);
-
-
-
-        const form = formElementsArray.map(formElement => (
-            <Input
-                key={formElement.id}
-                elementType={formElement.config.elementType}
-                elementConfig={formElement.config.elementConfig}
-                value={formElement.config.value}
-                invalid={!formElement.config.valid}
-                shouldValidate={formElement.config.validation}
-                touched={formElement.config.touched}
-                changed={(event) => this.authInputChangedHandler(event, formElement.id)}/>
-        ));
-
-        return (
-            <div className={classes.Auth}>
-                <form onSubmit={this.authSubmitHandler}>
-                    {form}
-                    <Button btnType="Success">SUBMIT</Button>
-                </form>
-            </div>
+    if (props.ings) {
+        burger = (
+            <Aux>
+                <Burger ingredients={props.ings} />
+                <BuildControls
+                    ingredientAdded={props.onIngredientAdded}
+                    ingredientRemoved={props.onIngredientRemoved}
+                    disabled={disabledInfo}
+                    purchasable={updatePurchaseState(props.ings)}
+                    ordered={purchaseHandler}
+                    isAuth={props.isAuthenticated}
+                    price={props.price}
+                />
+            </Aux>
+        );
+        orderSummary = (
+            <OrderSummary
+                ingredients={props.ings}
+                price={props.price}
+                purchaseCancelled={purchaseCancelHandler}
+                purchaseContinued={purchaseContinueHandler}
+            />
         );
     }
+    // {salad: true, meat: false, ...}
+    return (
+        <Aux>
+            <Modal
+                show={purchasing}
+                modalClosed={purchaseCancelHandler}
+            >
+                {orderSummary}
+            </Modal>
+            {burger}
+        </Aux>
+    );
+};
 
+const mapStateToProps = state => {
+    return {
+        ings: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        error: state.burgerBuilder.error,
+        isAuthenticated: state.auth.token !== null
+    };
+};
 
-}
+const mapDispatchToProps = dispatch => {
+    return {
+        onIngredientAdded: ingName => dispatch(actions.addIngredient(ingName)),
+        onIngredientRemoved: ingName => dispatch(actions.removeIngredient(ingName)),
+        onInitIngredients: () => dispatch(actions.initIngredients()),
+        onInitPurchase: () => dispatch(actions.purchaseInit()),
+        onSetAuthRedirectPath: path => dispatch(actions.setAuthRedirectPath(path))
+    };
+};
 
-export default Auth;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withErrorHandler(burgerBuilder, axios));
