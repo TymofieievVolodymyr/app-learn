@@ -1,62 +1,48 @@
-import React, {Component} from "react";
+import React, {useState, useEffect} from "react";
 import Modal from '../../componentns/UI/Modal/Modal';
 import Auxiliary from "../Auxiliary/Auxiliary";
 
 
 const withErrorHandler = (WrappedComponent, axios) => {
-    return class extends Component {
-        // state = {
-        //     error: null,
-        // }
-        //
-        // UNSAFE_componentWillMount() {
-        //     axios.interceptors.request.use(reg => {
-        //         this.setState({error: null})
-        //         return reg;
-        //     });
-        //     axios.interceptors.response.use(req => req, error => {
-        //         this.setState({error: error})
-        //     });
-        // }
+    return props => {
 
-        constructor(props) {
-            super(props);
-            this.state = {
-                error: null,
+        const [error, setError] = useState(null);
+
+        const reqInterceptor = axios.interceptors.request.use(reg => {
+            setError(null);
+            return reg;
+        });
+        const resInterceptor = axios.interceptors.response.use(req => req, err => {
+            setError(err);
+        });
+
+        useEffect(() => {
+            return () => {
+                axios.interceptors.request.eject(reqInterceptor)
+                axios.interceptors.response.eject(resInterceptor)
             }
+        }, [reqInterceptor, resInterceptor]);
 
-            this.reqInterceptor = axios.interceptors.request.use(reg => {
-                this.setState({error: null})
-                return reg;
-            });
-            this.resInterceptor = axios.interceptors.response.use(req => req, error => {
-                this.setState({error: error})
-            });
+        // componentWillUnmount()
+        // {
+        //     axios.interceptors.request.eject(this.reqInterceptor)
+        //     axios.interceptors.response.eject(this.resInterceptor)
+        // }
 
+        const errorConfirmedHandler = () => {
+            setError(null);
         }
 
-        componentWillUnmount() {
-            axios.interceptors.request.eject(this.reqInterceptor)
-            axios.interceptors.response.eject(this.resInterceptor)
-        }
-
-
-        errorConfirmedHandler = () => {
-            this.setState({error: null})
-        }
-
-        render() {
-            return (
-                <Auxiliary>
-                    <Modal
-                        show={this.state.error}
-                        close={this.errorConfirmedHandler}>
-                        {this.state.error ? this.state.error.message : null}
-                    </Modal>
-                    <WrappedComponent {...this.props}/>
-                </Auxiliary>
-            );
-        }
+        return (
+            <Auxiliary>
+                <Modal
+                    show={error}
+                    close={errorConfirmedHandler}>
+                    {error ? error.message : null}
+                </Modal>
+                <WrappedComponent {...props}/>
+            </Auxiliary>
+        );
     }
 }
 
